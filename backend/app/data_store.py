@@ -13,8 +13,8 @@ def get_zone_catalog() -> list[dict]:
     if not path.exists():
         raise FileNotFoundError(f"Zone data file not found: {path}")
 
-    with path.open("r", encoding="utf-8") as f:
-        zones = json.load(f)
+    with path.open("r", encoding="utf-8") as handle:
+        zones = json.load(handle)
 
     return [
         {

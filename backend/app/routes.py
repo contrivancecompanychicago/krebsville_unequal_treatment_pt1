@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 from app.config import settings
 from app.data_store import get_zone_by_id, get_zone_catalog
-from app.models import PlayerPayload, PlayerResponse
 from app.db import create_player, get_player
+from app.models import PlayerPayload, PlayerResponse
 
 router = APIRouter(prefix="/api", tags=["game"])
 
@@ -46,7 +47,7 @@ def fetch_player(player_id: str) -> PlayerResponse:
         credits=player.credits,
         hazard_level=player.hazard_level,
         current_zone_id=player.current_zone_id,
-        inventory=player.inventory,
+        inventory=json.loads(player.inventory),
     )
 
 
@@ -60,7 +61,7 @@ def register_player(payload: PlayerPayload) -> PlayerResponse:
         credits=player.credits,
         hazard_level=player.hazard_level,
         current_zone_id=player.current_zone_id,
-        inventory=player.inventory,
+        inventory=json.loads(player.inventory),
     )
 
 

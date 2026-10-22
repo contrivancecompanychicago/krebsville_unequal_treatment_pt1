@@ -1,19 +1,8 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
-
-
-class ZoneSummary(BaseModel):
-    id: int
-    zone_key: str
-    name: str
-    status: str
-    hazard_level: int
-    active_npc: Optional[str] = None
-    specialist_assigned: Optional[str] = None
-    access_requirement: Optional[str] = None
 
 
 class PlayerPayload(BaseModel):
