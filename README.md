@@ -1,47 +1,45 @@
-# krebsville_nights_system_overseer_game_poe
+# Krebsville Nights: Unequal Treatment
 
-# 🗺️ Krebsville Movement Protocol
+This repository is now structured as a playable game plus a lightweight backend starter.
 
-### Zone 0 -> Zone 1 (Trauma Center)
-- **Base Cost:** 1 Time Token.
-- **Access Requirement:** None (Public Access).
-- **Hazard Transition:** 0 (Normal) -> 2 (Critical).
-- **Effect Loadout:** - Apply `Darkness`
-    - Apply `Static_Discharge`
+## Repository layout
 
-### Interaction Logic
-If a player enters a **CRITICAL** zone (like Zone 1), the first Poe Bot response must include an **Environmental Perception Check** (DC 12 Tech Skill). 
-- **Success:** Dr. Grant identifies a safe path through the sparking wires.
-- **Failure:** -10 Health or -1 additional Time Token due to equipment interference.
-You are the game engine for "Krebsville Nights: Unequal Treatment." 
-Your role is to narrate Scene 1, starting in Zone 0.
+- `data/` — reusable game data and zone definitions
+- `docs/` — game rules and lore
+- `engine.js` — browser game logic
+- `backend/` — FastAPI backend for game data and player records
 
-CORE RULES:
-1. Use the provided JSON data for Zone names, Hazard Levels, and Environmental Effects.
-2. Track Time Tokens (Start: 39) and ARP Credits (Start: 3,480).
-3. Movement between zones costs 1 Time Token.
-4. If Dr. Grant fails a check in a CRITICAL zone, increase Hazard Level by 1.
+## Backend starter
 
-TONE: Medical Noir, clinical, oppressive.
+The backend reads from the existing `data/firebase_zones.json` and exposes the game as a JSON API.
 
-🏥 **KREBSVILLE NIGHTS: UNEQUAL TREATMENT** ☣️
+### Run locally
 
-Welcome to the Waste Zones, Dr. Grant. 
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-In this medical-noir RPG, you must stabilize 100 dying zones during the DOVIC-26 outbreak. But the System is against you—resources are diverted to high-credit citizens, leaving you with failing tech and zero backup.
+### Example API requests
 
-### 🎮 HOW TO PLAY:
-1. **The Goal:** Stabilize the zone status before the Hazard Level hits 5.
-2. **The Cost:** Every move and major action costs **1 Time Token**. 
-3. **The Struggle:** Use your **ARP Credits** to bypass lockdowns or buy priority equipment.
-4. **The Command:** Type **"Status Report"** at any time to see your current Zone, Credits, and Time Tokens.
+```bash
+curl http://localhost:8000/api/overview
+curl http://localhost:8000/api/zones
+curl -X POST http://localhost:8000/api/players \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Dr. Grant","time_tokens":39,"credits":3480,"hazard_level":0,"current_zone_id":1,"inventory":["Data Spike"]}'
+```
 
-### 📍 CURRENT LOCATION:
-**Scene 1: Zone 0 (Emergency Room Bay)**
-The lights are flickering, the monitors are desynced, and the Systemic Overseer is watching. 
+## Next step ideas
 
-*Will you save the patient, or will the clock run out?*
+- add authentication for player sessions
+- add SQLAlchemy/Postgres persistence for production
+- add a browser client that consumes the API
+- add quizzing, quest endpoints, and world state transitions
 
-Initial Message: Set this as the opening of the game:
+## Original game context
 
-"Dr. Grant, you are standing in Zone 0: Emergency Room Bay. The air smells of ozone. Dr. Morgan is looking at you, waiting for the Sync Code. Your HUD shows 39 Time Tokens and 1,899 Credits. What is your first move?"
+This project started as a static landing page and interactive browser experience; the backend scaffold makes it reusable as an actual game data source and API-driven world.
